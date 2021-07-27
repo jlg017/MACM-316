@@ -1,0 +1,684 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Assn_3</title><meta name="generator" content="MATLAB 9.9"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2021-06-21"><meta name="DC.source" content="Assn_3.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><pre class="codeinput"><span class="comment">%--------------------------------Question 1a--------------------------------</span>
+<span class="comment">%First Matrix</span>
+
+<span class="comment">%extract data from file</span>
+data = load(<span class="string">'Data.mat'</span>);
+A = data.E;
+B = data.B;
+D = data.D;
+epsilon = data.epsilon;
+
+<span class="comment">%calculate amplification upper bound</span>
+k1 = cond(A,1);
+x = [];
+y = [];
+
+<span class="comment">%Amplification Factors and index i</span>
+Amp = [];
+i = 0;
+<span class="comment">%Calculate</span>
+<span class="keyword">for</span> j = 1:10
+    b = B(:,j);
+    x = A\b;
+    <span class="keyword">for</span> k = 1:10
+        i=i+1;
+        d = D(:,k);
+        y = A\(b + epsilon*d);
+        Amp(i) = norm(y-x,1) / (epsilon*norm(x,1));
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">%Display Values</span>
+disp(<span class="string">'Average of Amplication Factors for E:'</span>);
+disp(mean(Amp));
+disp(<span class="string">'Median of Amplication Factors for E:'</span>);
+disp(median(Amp));
+disp(<span class="string">'Max of Amplication Factors for E:'</span>);
+disp(max(Amp));
+disp(<span class="string">'kappa_{1}(E)'</span>);
+disp(k1);
+
+<span class="comment">%plot</span>
+y1 = yline(k1, <span class="string">'-'</span>,<span class="string">'kappa_{1}(E)'</span>, <span class="string">'LineWidth'</span>, 2);
+y1.LabelHorizontalAlignment = <span class="string">'center'</span>;
+y1.Color = <span class="string">'black'</span>;
+hold <span class="string">on</span>
+num = [1:1:100];
+scatter(num,Amp)
+set(gca, <span class="string">'YScale'</span>, <span class="string">'log'</span>)
+xlabel(<span class="string">'Calculation Number'</span>)
+ylabel(<span class="string">'Amplification Factor'</span>)
+axis([1 100 0 10^4])
+hold <span class="string">off</span>
+</pre><pre class="codeoutput">Average of Amplication Factors for E:
+  258.2577
+
+Median of Amplication Factors for E:
+    1.9622
+
+Max of Amplication Factors for E:
+   3.4880e+03
+
+kappa_{1}(E)
+   6.8296e+03
+
+</pre><img vspace="5" hspace="5" src="Assn_3_01.png" alt=""> <pre class="codeinput"><span class="comment">%Second Matrix</span>
+
+<span class="comment">%extract data from file</span>
+data = load(<span class="string">'Data.mat'</span>);
+A = data.H;
+B = data.B;
+D = data.D;
+epsilon = data.epsilon;
+
+<span class="comment">%calculate amplification upper bound</span>
+k1 = cond(A,1);
+x = [];
+y = [];
+
+<span class="comment">%Amplification Factors and index i</span>
+Amp = [];
+i = 0;
+<span class="comment">%Calculate</span>
+<span class="keyword">for</span> j = 1:10
+    b = B(:,j);
+    x = A\b;
+    <span class="keyword">for</span> k = 1:10
+        i=i+1;
+        d = D(:,k);
+        y = A\(b + epsilon*d);
+        Amp(i) = norm(y-x,1) / (epsilon*norm(x,1));
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">%Display Values</span>
+disp(<span class="string">'Average of Amplication Factors for H:'</span>);
+disp(mean(Amp));
+disp(<span class="string">'Median of Amplication Factors for H:'</span>);
+disp(median(Amp));
+disp(<span class="string">'Max of Amplication Factors for H:'</span>);
+disp(max(Amp));
+disp(<span class="string">'kappa_{1}(H)'</span>);
+disp(k1);
+
+<span class="comment">%plot</span>
+y1 = yline(k1, <span class="string">'-'</span>,<span class="string">'kappa_{1}(H)'</span>, <span class="string">'LineWidth'</span>, 2);
+y1.LabelHorizontalAlignment = <span class="string">'center'</span>;
+y1.Color = <span class="string">'black'</span>;
+hold <span class="string">on</span>
+num = [1:1:100];
+scatter(num,Amp)
+set(gca, <span class="string">'YScale'</span>, <span class="string">'log'</span>)
+axis([1 100 0 10^9])
+xlabel(<span class="string">'Calculation Number'</span>)
+ylabel(<span class="string">'Amplification Factor'</span>)
+hold <span class="string">off</span>
+</pre><pre class="codeoutput">Average of Amplication Factors for H:
+   7.4294e+05
+
+Median of Amplication Factors for H:
+    2.5611
+
+Max of Amplication Factors for H:
+   1.4951e+07
+
+kappa_{1}(H)
+   2.9070e+07
+
+</pre><img vspace="5" hspace="5" src="Assn_3_02.png" alt=""> <pre class="codeinput"><span class="comment">%--------------------------------Question 1b-------------------------------</span>
+<span class="comment">%extract data from file</span>
+data = load(<span class="string">'Data.mat'</span>);
+A = data.E;
+B = data.B;
+BIGC = data.BIGC;
+epsilon = data.epsilon;
+
+<span class="comment">%calculate amplification upper bound &amp; its reciprocal(lower bound?)</span>
+k1 = cond(A,1);
+k1_r = rcond(A);
+x = [];
+y = [];
+
+<span class="comment">%Amplification Factors and index i</span>
+Amp = [];
+i = 0;
+<span class="comment">%Calculate</span>
+<span class="keyword">for</span> j = 1:10
+    b = B(:,j);
+    x = A\b;
+    <span class="keyword">for</span> n = 1:6
+        C = BIGC(:,:,n);
+        i = i+1;
+        z = (A + epsilon*C)\b;
+        Amp(i) = norm(z-x,1) / (epsilon*norm(x,1));
+    <span class="keyword">end</span>
+
+<span class="keyword">end</span>
+
+<span class="comment">%Display Values</span>
+disp(<span class="string">'Average of Amplication Factors for E (Perturbed):'</span>);
+disp(mean(Amp));
+disp(<span class="string">'Median of Amplication Factors for E (Perturbed):'</span>);
+disp(median(Amp));
+disp(<span class="string">'Max of Amplication Factors for E (Perturbed):'</span>)
+disp(max(Amp));
+disp(<span class="string">'kappa_{1}(perturbed E)'</span>);
+disp(k1);
+disp(<span class="string">'1/kappa_{1}(perturbed E)'</span>);
+disp(k1_r);
+<span class="comment">%plot</span>
+y1 = yline(k1, <span class="string">'-'</span>,<span class="string">'kappa_{1}(E)'</span>, <span class="string">'LineWidth'</span>, 2);
+y1.LabelHorizontalAlignment = <span class="string">'center'</span>;
+y1.Color = <span class="string">'black'</span>;
+y2 = yline(k1_r, <span class="string">'-'</span>,<span class="string">'1/kappa_{1}(E)'</span>, <span class="string">'LineWidth'</span>, 2);
+y1.LabelHorizontalAlignment = <span class="string">'center'</span>;
+y1.Color = <span class="string">'black'</span>;
+
+hold <span class="string">on</span>
+num = [1:60];
+scatter(num,Amp)
+set(gca, <span class="string">'YScale'</span>, <span class="string">'log'</span>)
+axis([1 60 10^-4 10^5])
+title(<span class="string">'E Perturbed'</span>)
+xlabel(<span class="string">'Calculation Number'</span>)
+ylabel(<span class="string">'Amplification Factor'</span>)
+hold <span class="string">off</span>
+</pre><pre class="codeoutput">Average of Amplication Factors for E (Perturbed):
+   25.0106
+
+Median of Amplication Factors for E (Perturbed):
+   27.2603
+
+Max of Amplication Factors for E (Perturbed):
+   57.4606
+
+kappa_{1}(perturbed E)
+   6.8296e+03
+
+1/kappa_{1}(perturbed E)
+   1.4642e-04
+
+</pre><img vspace="5" hspace="5" src="Assn_3_03.png" alt=""> <pre class="codeinput"><span class="comment">%--------------------------------Question 1b-------------------------------</span>
+<span class="comment">%extract data from file</span>
+data = load(<span class="string">'Data.mat'</span>);
+A = data.H;
+B = data.B;
+BIGC = data.BIGC;
+epsilon = data.epsilon;
+
+<span class="comment">%calculate amplification upper bound &amp; its reciprocal</span>
+k1 = cond(A,1);
+k1_r = rcond(A);
+x = [];
+y = [];
+
+<span class="comment">%Amplification Factors and index i</span>
+Amp = [];
+i = 0;
+<span class="comment">%Calculate</span>
+<span class="keyword">for</span> j = 1:10
+    b = B(:,j);
+    x = A\b;
+    <span class="keyword">for</span> n = 1:6
+        C = BIGC(:,:,n);
+        i=i+1;
+        z = (A + epsilon*C)\b;
+        Amp(i) = norm(z-x,1) / (epsilon*norm(x,1));
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">%Display Values</span>
+disp(<span class="string">'Average of Amplication Factors for H(Perturbed):'</span>)
+disp(mean(Amp))
+disp(<span class="string">'Median of Amplication Factors for H(Perturbed):'</span>)
+disp(median(Amp))
+disp(<span class="string">'Maxima of Amplication Factors for H(Perturbed):'</span>)
+disp(<span class="string">'Max'</span>)
+disp(max(Amp))
+disp(<span class="string">'Min'</span>)
+disp(min(Amp))
+disp(<span class="string">'kappa_{1}(perturbed H)'</span>)
+disp(k1)
+disp(<span class="string">'1/kappa_{1}(perturbed H)'</span>)
+disp(k1_r)
+
+<span class="comment">%plot</span>
+y1 = yline(k1, <span class="string">'-'</span>,<span class="string">'kappa_{1}(H)'</span>, <span class="string">'LineWidth'</span>, 2);
+y1.LabelHorizontalAlignment = <span class="string">'center'</span>;
+y1.Color = <span class="string">'black'</span>;
+y2 = yline(k1_r, <span class="string">'-'</span>,<span class="string">'1/kappa_{1}(H)'</span>, <span class="string">'LineWidth'</span>, 2);
+y1.LabelHorizontalAlignment = <span class="string">'center'</span>;
+y1.Color = <span class="string">'black'</span>;
+hold <span class="string">on</span>
+num = [1:60];
+scatter(num,Amp)
+set(gca, <span class="string">'YScale'</span>, <span class="string">'log'</span>)
+axis([1 60 10^-8 10^8])
+title(<span class="string">'H Perturbed'</span>)
+xlabel(<span class="string">'Calculation Number'</span>)
+ylabel(<span class="string">'Amplification Factor'</span>)
+hold <span class="string">off</span>
+</pre><pre class="codeoutput">Average of Amplication Factors for H(Perturbed):
+   8.6303e+05
+
+Median of Amplication Factors for H(Perturbed):
+   5.0130e+05
+
+Maxima of Amplication Factors for H(Perturbed):
+Max
+   3.8664e+06
+
+Min
+   3.6473e+04
+
+kappa_{1}(perturbed H)
+   2.9070e+07
+
+1/kappa_{1}(perturbed H)
+   3.4399e-08
+
+</pre><img vspace="5" hspace="5" src="Assn_3_04.png" alt=""> <pre class="codeinput"><span class="comment">%--------------------------------Question 2 a------------------------------</span>
+<span class="comment">%extract data from file</span>
+data = load(<span class="string">'Data.mat'</span>);
+<span class="comment">%Set up matrices</span>
+A = data.E;
+AINV = inv(A);
+AC = inv(AINV);
+I = eye(6);
+<span class="comment">%Calculate norms</span>
+x = norm((A*AINV)-I);
+y = norm(AC - A);
+<span class="comment">%Results</span>
+output = [<span class="string">'For A = E -&gt;    norm((A*AINV)-I):'</span>, num2str(x), <span class="string">'    norm(AC - A): '</span>, num2str(y)];
+disp(output);
+</pre><pre class="codeoutput">For A = E -&gt;    norm((A*AINV)-I):9.8276e-14    norm(AC - A): 1.4949e-12
+</pre><pre class="codeinput"><span class="comment">%--------------------------------Question 2 b------------------------------</span>
+<span class="comment">%extract data from file</span>
+data = load(<span class="string">'Data.mat'</span>);
+<span class="comment">%Set up matrices</span>
+A = data.H;
+HI = data.HI;
+AINV = inv(A);
+AC = inv(AINV);
+I = eye(6);
+<span class="comment">%Calculate norms</span>
+x = norm((A*AINV)-I);
+y = norm(AC - A);
+distToExact = norm(AINV - HI);
+<span class="comment">%Results</span>
+output = [<span class="string">'For A = H -&gt;    norm((A*AINV)-I):'</span>, num2str(x), <span class="string">'    norm(AC - A): '</span>, num2str(y), <span class="string">'    norm(AINV - HI):'</span>, num2str(distToExact)];
+disp(output);
+</pre><pre class="codeoutput">For A = H -&gt;    norm((A*AINV)-I):3.1838e-10    norm(AC - A): 7.3695e-12    norm(AINV - HI):0.00037458
+</pre><pre class="codeinput"><span class="comment">%--------------------------------Question 2 c------------------------------</span>
+<span class="comment">%extract data from file</span>
+data = load(<span class="string">'Data.mat'</span>);
+<span class="comment">%Set up matrices</span>
+A = data.H8;
+HI8 = data.HI8;
+AINV = inv(A);
+AC = inv(AINV);
+I = eye(8);
+<span class="comment">%Calculate norms</span>
+x = norm((A*AINV)-I);
+y = norm(AC - A);
+distToExact = norm(AINV - HI8);
+<span class="comment">%Results</span>
+output = [<span class="string">'For A = H8-&gt;    norm((A*AINV)-I):'</span>, num2str(x), <span class="string">'    norm(AC - A): '</span>, num2str(y), <span class="string">'    norm(AINV - HI8):'</span>, num2str(distToExact)];
+disp(output);
+</pre><pre class="codeoutput">For A = H8-&gt;    norm((A*AINV)-I):1.3746e-07    norm(AC - A): 3.0106e-09    norm(AINV - HI8):673.7377
+</pre><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2020b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% 
+%REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHQuestion 1aREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+%First Matrix
+
+%extract data from file
+data = load('Data.mat');
+A = data.E;
+B = data.B;
+D = data.D;
+epsilon = data.epsilon;
+
+%calculate amplification upper bound
+k1 = cond(A,1); 
+x = [];
+y = [];
+
+%Amplification Factors and index i
+Amp = [];
+i = 0;
+%Calculate
+for j = 1:10
+    b = B(:,j); 
+    x = A\b;
+    for k = 1:10
+        i=i+1;
+        d = D(:,k);
+        y = A\(b + epsilon*d);
+        Amp(i) = norm(y-x,1) / (epsilon*norm(x,1));
+    end 
+end
+
+%Display Values
+disp('Average of Amplication Factors for E:');
+disp(mean(Amp));
+disp('Median of Amplication Factors for E:');
+disp(median(Amp));
+disp('Max of Amplication Factors for E:');
+disp(max(Amp));
+disp('kappa_{1}(E)');
+disp(k1);
+
+%plot
+y1 = yline(k1, '-','kappa_{1}(E)', 'LineWidth', 2);
+y1.LabelHorizontalAlignment = 'center';
+y1.Color = 'black';
+hold on
+num = [1:1:100];
+scatter(num,Amp)
+set(gca, 'YScale', 'log')
+xlabel('Calculation Number')
+ylabel('Amplification Factor')
+axis([1 100 0 10^4])
+hold off
+
+%%
+%Second Matrix
+
+%extract data from file
+data = load('Data.mat');
+A = data.H;
+B = data.B;
+D = data.D;
+epsilon = data.epsilon;
+
+%calculate amplification upper bound
+k1 = cond(A,1); 
+x = [];
+y = [];
+
+%Amplification Factors and index i
+Amp = [];
+i = 0;
+%Calculate
+for j = 1:10
+    b = B(:,j); 
+    x = A\b;
+    for k = 1:10
+        i=i+1;
+        d = D(:,k);
+        y = A\(b + epsilon*d);
+        Amp(i) = norm(y-x,1) / (epsilon*norm(x,1));
+    end 
+end
+
+%Display Values
+disp('Average of Amplication Factors for H:');
+disp(mean(Amp));
+disp('Median of Amplication Factors for H:');
+disp(median(Amp));
+disp('Max of Amplication Factors for H:');
+disp(max(Amp));
+disp('kappa_{1}(H)');
+disp(k1);
+
+%plot
+y1 = yline(k1, '-','kappa_{1}(H)', 'LineWidth', 2);
+y1.LabelHorizontalAlignment = 'center';
+y1.Color = 'black';
+hold on
+num = [1:1:100];
+scatter(num,Amp)
+set(gca, 'YScale', 'log')
+axis([1 100 0 10^9])
+xlabel('Calculation Number')
+ylabel('Amplification Factor') 
+hold off
+
+%%
+%REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHQuestion 1bREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+%extract data from file
+data = load('Data.mat');
+A = data.E;
+B = data.B;
+BIGC = data.BIGC;
+epsilon = data.epsilon;
+
+%calculate amplification upper bound & its reciprocal(lower bound?)
+k1 = cond(A,1);
+k1_r = rcond(A);
+x = [];
+y = [];
+
+%Amplification Factors and index i
+Amp = [];
+i = 0;
+%Calculate
+for j = 1:10
+    b = B(:,j); 
+    x = A\b;
+    for n = 1:6
+        C = BIGC(:,:,n);
+        i = i+1;
+        z = (A + epsilon*C)\b;
+        Amp(i) = norm(z-x,1) / (epsilon*norm(x,1));
+    end
+     
+end
+
+%Display Values
+disp('Average of Amplication Factors for E (Perturbed):');
+disp(mean(Amp));
+disp('Median of Amplication Factors for E (Perturbed):');
+disp(median(Amp));
+disp('Max of Amplication Factors for E (Perturbed):')
+disp(max(Amp));
+disp('kappa_{1}(perturbed E)');
+disp(k1);
+disp('1/kappa_{1}(perturbed E)');
+disp(k1_r);
+%plot
+y1 = yline(k1, '-','kappa_{1}(E)', 'LineWidth', 2);
+y1.LabelHorizontalAlignment = 'center';
+y1.Color = 'black';
+y2 = yline(k1_r, '-','1/kappa_{1}(E)', 'LineWidth', 2);
+y1.LabelHorizontalAlignment = 'center';
+y1.Color = 'black';
+
+hold on
+num = [1:60];
+scatter(num,Amp)
+set(gca, 'YScale', 'log')
+axis([1 60 10^-4 10^5])
+title('E Perturbed')
+xlabel('Calculation Number')
+ylabel('Amplification Factor') 
+hold off
+
+%%
+%REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHQuestion 1bREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-
+%extract data from file
+data = load('Data.mat');
+A = data.H;
+B = data.B;
+BIGC = data.BIGC;
+epsilon = data.epsilon;
+
+%calculate amplification upper bound & its reciprocal
+k1 = cond(A,1);
+k1_r = rcond(A);
+x = [];
+y = [];
+
+%Amplification Factors and index i
+Amp = [];
+i = 0;
+%Calculate
+for j = 1:10
+    b = B(:,j); 
+    x = A\b;
+    for n = 1:6
+        C = BIGC(:,:,n);
+        i=i+1;
+        z = (A + epsilon*C)\b;
+        Amp(i) = norm(z-x,1) / (epsilon*norm(x,1));
+    end
+end
+
+%Display Values
+disp('Average of Amplication Factors for H(Perturbed):')
+disp(mean(Amp))
+disp('Median of Amplication Factors for H(Perturbed):')
+disp(median(Amp))
+disp('Maxima of Amplication Factors for H(Perturbed):')
+disp('Max')
+disp(max(Amp))
+disp('Min')
+disp(min(Amp))
+disp('kappa_{1}(perturbed H)')
+disp(k1)
+disp('1/kappa_{1}(perturbed H)')
+disp(k1_r)
+
+%plot
+y1 = yline(k1, '-','kappa_{1}(H)', 'LineWidth', 2);
+y1.LabelHorizontalAlignment = 'center';
+y1.Color = 'black';
+y2 = yline(k1_r, '-','1/kappa_{1}(H)', 'LineWidth', 2);
+y1.LabelHorizontalAlignment = 'center';
+y1.Color = 'black';
+hold on
+num = [1:60];
+scatter(num,Amp)
+set(gca, 'YScale', 'log')
+axis([1 60 10^-8 10^8])
+title('H Perturbed')
+xlabel('Calculation Number')
+ylabel('Amplification Factor') 
+hold off
+
+
+%%
+%REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHQuestion 2 aREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+%extract data from file
+data = load('Data.mat');
+%Set up matrices
+A = data.E;
+AINV = inv(A);
+AC = inv(AINV);
+I = eye(6);
+%Calculate norms
+x = norm((A*AINV)-I);
+y = norm(AC - A);
+%Results
+output = ['For A = E ->    norm((A*AINV)-I):', num2str(x), '    norm(AC - A): ', num2str(y)];
+disp(output);
+
+
+%%
+%REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHQuestion 2 bREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+%extract data from file
+data = load('Data.mat');
+%Set up matrices
+A = data.H;
+HI = data.HI;
+AINV = inv(A);
+AC = inv(AINV);
+I = eye(6);
+%Calculate norms
+x = norm((A*AINV)-I);
+y = norm(AC - A);
+distToExact = norm(AINV - HI);
+%Results
+output = ['For A = H ->    norm((A*AINV)-I):', num2str(x), '    norm(AC - A): ', num2str(y), '    norm(AINV - HI):', num2str(distToExact)];
+disp(output);
+
+%%
+%REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHQuestion 2 cREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH
+%extract data from file
+data = load('Data.mat');
+%Set up matrices
+A = data.H8;
+HI8 = data.HI8;
+AINV = inv(A);
+AC = inv(AINV);
+I = eye(8);
+%Calculate norms
+x = norm((A*AINV)-I);
+y = norm(AC - A);
+distToExact = norm(AINV - HI8);
+%Results
+output = ['For A = H8->    norm((A*AINV)-I):', num2str(x), '    norm(AC - A): ', num2str(y), '    norm(AINV - HI8):', num2str(distToExact)];
+disp(output);
+
+##### SOURCE END #####
+--></body></html>

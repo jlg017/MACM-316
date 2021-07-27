@@ -1,0 +1,156 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>MACM316assignment1</title><meta name="generator" content="MATLAB 9.9"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2021-05-25"><meta name="DC.source" content="MACM316assignment1.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; }
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+span.typesection { color:#A0522D }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><pre class="codeinput"><span class="comment">%implement f(x): fn is the copy of f that is used to compute f^i(x)</span>
+syms <span class="string">x</span> <span class="string">f</span> <span class="string">fn</span>
+a = 2*x;
+b = 2*x-1;
+f = piecewise((0&lt;=x)&amp;(x&lt;=0.5), a, (0.5&lt;x)&amp;(x&lt;=1), b);
+<span class="comment">%plot of f(x)</span>
+fplot(f,[0,1]);
+
+<span class="comment">%declare x_0 and init arrays to store the computed values</span>
+x_0 = 0.6;
+fVals = zeros(1,100);
+iVals = zeros(1,100);
+
+<span class="comment">%compute f^i(x_0)</span>
+fn = f;
+<span class="keyword">for</span> i = 1:100
+   <span class="comment">% find f^i(x_0)</span>
+   val = subs(fn,x,x_0);
+   val = round(val,12);
+   <span class="comment">%store found value</span>
+   fVals(i) = val;
+   iVals(i) = i;
+   <span class="comment">%display f(x_0), f^2(x_0), f^3(x_0) and f^100(x_0)</span>
+    <span class="keyword">if</span> (i == 1 || i == 2 || i == 3 || i == 100)
+         disp([i val]);
+    <span class="keyword">end</span>
+   <span class="comment">%compute f^i+1(x) = f(f^i(x))</span>
+   fn = subs(f,x,val);
+<span class="keyword">end</span>
+
+<span class="comment">%plot sequence</span>
+scatter(iVals,fVals, 20, <span class="string">'black'</span>,<span class="string">'filled'</span>);
+hold <span class="string">on</span>
+grid <span class="string">on</span>
+xlabel(<span class="string">'i'</span>);
+ylabel(<span class="string">'f^i(x_0)'</span>)
+title(<span class="string">'x_0 = 0.6'</span>);<span class="comment">%change to reflect x_0</span>
+</pre><pre class="codeoutput">[1, 0.2]
+ 
+[2, 0.4]
+ 
+[3, 0.8]
+ 
+[100, 0.6]
+ 
+</pre><img vspace="5" hspace="5" src="MACM316assignment1_01.png" alt=""> <p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2020b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%implement f(x): fn is the copy of f that is used to compute f^i(x)
+syms x f fn
+a = 2*x;
+b = 2*x-1;
+f = piecewise((0<=x)&(x<=0.5), a, (0.5<x)&(x<=1), b);
+%plot of f(x)
+fplot(f,[0,1]);
+
+%declare x_0 and init arrays to store the computed values
+x_0 = 0.6;
+fVals = zeros(1,100);
+iVals = zeros(1,100);
+
+%compute f^i(x_0)
+fn = f;
+for i = 1:100
+   % find f^i(x_0)
+   val = subs(fn,x,x_0);
+   val = round(val,12);
+   %store found value
+   fVals(i) = val;
+   iVals(i) = i;
+   %display f(x_0), f^2(x_0), f^3(x_0) and f^100(x_0)
+    if (i == 1 || i == 2 || i == 3 || i == 100)    
+         disp([i val]);
+    end
+   %compute f^i+1(x) = f(f^i(x))
+   fn = subs(f,x,val);
+end
+
+%plot sequence
+scatter(iVals,fVals, 20, 'black','filled');
+hold on
+grid on
+xlabel('i');
+ylabel('f^i(x_0)')
+title('x_0 = 0.6');%change to reflect x_0 
+
+##### SOURCE END #####
+--></body></html>
